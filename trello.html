@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trello RSS Feed Timeline</title>
+    <style>
+        .timeline {
+            display: flex;
+            flex-direction: column;
+        }
+        .timeline-item {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="timeline" id="timeline"></div>
+
+    <script>
+        async function loadRSS() {
+            const rssUrl = 'https://eo1j0yu7yynu58d.m.pipedream.net'; // Substitua pela URL do webhook do PipeDream
+            const response = await fetch(rssUrl);
+            const text = await response.text();
+            const parser = new DOMParser();
+            const xml = parser.parseFromString(text, 'application/xml');
+
+            const items = xml.querySelectorAll('item');
+            const timeline = document.getElementById('timeline');
+
+            items.forEach(item => {
+                const title = item.querySelector('title').textContent;
+                const link = item.querySelector('link').textContent;
+                const description = item.querySelector('description').textContent;
+                const pubDate = item.querySelector('pubDate').textContent;
+
+                const timelineItem = document.createElement('div');
+                timelineItem.classList.add('timeline-item');
+
+                timelineItem.innerHTML = `
+                    <h3><a href="${link}" target="_blank">${title}</a></h3>
+                    <p>${description}</p>
+                    <small>${pubDate}</small>
+                `;
+
+                timeline.appendChild(timelineItem);
+            });
+        }
+
+        loadRSS();
+    </script>
+</body>
+</html>

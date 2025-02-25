@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f0f0f0;
+      color: #30338F;
+      margin: 0;
+      padding: 0;
+      overflow: hidden; /* Impede a rolagem */
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px;
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    #logo {
+      height: 50px;
+    }
+    #title {
+      font-size: 2em;
+      font-weight: bold;
+      color: #03A859;
+      margin-left: auto;
+    }
+    main {
+      display: flex;
+      width: 100%;
+      max-width: 1200px;
+      margin: 20px auto;
+      gap: 20px;
+    }
+    .column {
+      display: flex;
+      flex-direction: column;
+      gap: 0px;
+    }
+    #left-column {
+      flex: 1;
+    }
+    #right-column {
+      flex: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0px;
+      color: #03A859;
+    }
+    .section-header i {
+      margin-right: 10px;
+    }
+    section {
+      padding: 0px 20px 10px 20px;
+      background-color: white;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 10px;
+    }
+    .row {
+      display: flex;
+      gap: 10px;
+    }
+    .row section {
+      flex: 1;
+    }
+    footer {
+      width: 98%;
+      background-color: #30338F;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      position: fixed;
+      bottom: 0;
+    }
+    #last-update {
+      margin-left: auto;
+      font-size: 1em;
+    }
+    iframe {
+      width: 100%;
+      height: 450px;
+      border-width: 0;
+      frameborder: 0;
+      scrolling: no;
+    }
+    #announcements iframe {
+      height: 400px;
+    }
+    #calendar-iframe {
+      width: 100%;
+      height: auto;
+      border: none;
+      margin-top: 1px;
+    }
+    /* Esconde o iframe do vídeo */
+    #background-audio {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo.png" alt="Logo" id="logo">
+    <div id="title">DASHBOARD</div>
+  </header>
+  <main>
+    <div class="column" id="left-column">
+      <section>
+        <div class="section-header">
+          <i class="fas fa-bell"></i>
+          <h2>Avisos</h2>
+        </div>
+        <div id="announcements">
+          <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vT0vKFxv0JhNHL8zPXj9ydSAcd1YSKDD7mAeRnuv7oSgxvtao6swZJaagKb_VH_779UXaKBS8OlaU40/pubhtml?gid=0&amp;single=false&amp;widget=false&amp;title=false&amp;headers=false"></iframe>
+        </div>
+      </section>
+      <iframe src="https://site.univar.io/dash/cal.html" id="calendar-iframe"></iframe>
+    </div>
+    <div class="column" id="right-column">
+      <section>
+        <div class="section-header">
+            <i class="fas fa-edit"></i>
+            <h2>Datas Importantes</h2>
+        </div>
+        <div id="birthdays">
+          <iframe src="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=America%2FSao_Paulo&bgcolor=%23ffffff&mode=AGENDA&showTitle=0&showNav=0&showDate=0&showPrint=0&showTabs=0&showCalendars=0&showTz=0&src=c2s5djExYWMwanVrM3F0bTRiaWM2aDZhZm9wdjh1bGhAaW1wb3J0LmNhbGVuZGFyLmdvb2dsZS5jb20&src=MGJqZmxhdXUybmo2Yzg1YXA1cjFzcDRzbjUycmU2aGlAaW1wb3J0LmNhbGVuZGFyLmdvb2dsZS5jb20&src=MHEzODdzdmpmbnI3M3UwYWFhdm5tYTY4MzdwdWNhc2xAaW1wb3J0LmNhbGVuZGFyLmdvb2dsZS5jb20&color=%23616161&color=%233F51B5&color=%23616161"></iframe>
+        </div>
+      </section>
+    </div>
+  </main>
+  <footer>
+    <div id="footer-date"></div>
+    <div id="last-update"></div>
+  </footer>
+
+  <!-- Iframe oculto para áudio do YouTube -->
+  <iframe id="background-audio"
+    src="https://www.youtube.com/embed/6Y1Sm5A9a_k?autoplay=1&loop=1&playlist=6Y1Sm5A9a_k&mute=0"
+    frameborder="0"
+    allow="autoplay"
+    allowfullscreen>
+  </iframe>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const footerDateElement = document.getElementById('footer-date');
+      const lastUpdateElement = document.getElementById('last-update');
+
+      function updateDate() {
+        const now = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        footerDateElement.textContent = now.toLocaleDateString('pt-BR', options);
+      }
+
+      function setLastUpdate() {
+        const now = new Date();
+        lastUpdateElement.textContent = `Power by AC Soluções | Última atualização: ${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+      }
+
+      updateDate();
+      setLastUpdate();
+
+      setTimeout(() => {
+        location.reload();
+      }, 300000);
+    });
+  </script>
+</body>
+</html>

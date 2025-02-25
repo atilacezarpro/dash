@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site Monitoring Icons</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+
+        .dashboard {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .circle {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: gray; /* default color */
+        }
+
+        p {
+            margin-top: 5px;
+            font-size: 14px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="icon" id="site1">
+            <div class="circle"></div>
+            <p>HUB</p>
+        </div>
+        <div class="icon" id="site2">
+            <div class="circle"></div>
+            <p>AVA</p>
+        </div>
+        <div class="icon" id="site4">
+            <div class="circle"></div>
+            <p>OPEN</p>
+        </div>        
+        <div class="icon" id="site3">
+            <div class="circle"></div>
+            <p>SITE</p>
+        </div>        
+        <div class="icon" id="site5">
+            <div class="circle"></div>
+            <p>VEST</p>
+        </div> 
+       
+    </div>
+
+<script>
+    window.onload = function() {
+        const sites = [
+            { id: 'site1', url: 'https://site.univar.io/' },
+            { id: 'site2', url: 'http://ava.univar.edu.br/' },
+            { id: 'site3', url: 'http://univar.edu.br/' },
+            { id: 'site4', url: 'https://open.univar.edu.br/' },
+            { id: 'site5', url: 'https://vestibular.univar.io/' }
+        ];
+
+        function checkSiteStatus(id, url) {
+            const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+            fetch(proxyUrl)
+                .then(response => {
+                    const element = document.getElementById(id).querySelector('.circle');
+                    if (response.ok) {
+                        element.style.backgroundColor = 'green';
+                        console.log(`${url} is online`);
+                    } else {
+                        element.style.backgroundColor = 'red';
+                        console.log(`${url} is offline`);
+                    }
+                })
+                .catch(error => {
+                    const element = document.getElementById(id).querySelector('.circle');
+                    element.style.backgroundColor = 'red';
+                    console.log(`${url} is offline (error: ${error})`);
+                });
+        }
+
+        function checkAllSites() {
+            sites.forEach(site => {
+                checkSiteStatus(site.id, site.url);
+            });
+        }
+
+        // Wait for 10 seconds before checking sites initially
+        setTimeout(() => {
+            checkAllSites();
+
+            // Set interval to check sites every 30 seconds (30000 milliseconds)
+            setInterval(checkAllSites, 30000);
+        }, 3000); // 10 seconds delay
+    };
+</script>
+
+
+
+
+
+
+
+</body>
+</html>
